@@ -1,0 +1,9 @@
+<app-abstract-table [data]="warehouses" (elementRemoved)="onElementRemoved($event);">
+  <ng-template templateId="prepend">
+    <h4>ZMIENIONY PREPEND</h4>
+	</ng-template>
+
+	<ng-template templateId="append">
+    <h4>ZMIENIONY APPEND</h4>
+	</ng-template>
+</app-abstract-table>
