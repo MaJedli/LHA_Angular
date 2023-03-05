@@ -1,9 +1,19 @@
 <app-abstract-table [data]="products" (elementRemoved)="onElementRemoved($event);">
-  <ng-template templateId="prepend">
-    <h4>ZMIENIONY PREPEND</h4>
-	</ng-template>
+  <ng-container matColumnDef="availaibility">
+    <th
+        mat-header-cell
+        *matHeaderCellDef
+    >
+        Change status
+    </th>
+    <td
+        mat-cell
+        *matCellDef="let element"
+    >
+        <button mat-raised-button>
+            Change availaibility
+        </button>
+    </td>
+  </ng-container>
 
-	<ng-template templateId="append">
-    <h4>ZMIENIONY APPEND</h4>
-	</ng-template>
 </app-abstract-table>

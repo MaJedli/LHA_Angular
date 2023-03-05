@@ -16,7 +16,8 @@ import { TemplateWithIdDirective } from './directives/template-with-id.directive
   ],
   exports: [
     AbstractTableComponent,
-    TemplateWithIdDirective
+    TemplateWithIdDirective,
+    MaterialModule,
   ]
 })
 export class SharedModule {}
