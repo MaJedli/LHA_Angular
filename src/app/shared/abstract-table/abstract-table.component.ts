@@ -1,3 +1,4 @@
+import { CdkColumnDef } from '@angular/cdk/table';
 import {
   AfterContentInit,
   AfterViewInit,
@@ -15,7 +16,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { MatTable, MatColumnDef, MatCellDef, MatHeaderCellDef, MatFooterCellDef } from '@angular/material/table';
-import { TemplateWithIdDirective } from '../directives/template-with-id.directive';
 
 type AcceptableInputTypes = string | number | boolean | Date;
 type SingleDateElement = { [key: string]: AcceptableInputTypes };
@@ -29,26 +29,8 @@ export class AbstractTableComponent implements OnInit, AfterContentInit, AfterVi
   @Input() data: SingleDateElement[] = [];
   @Output() elementRemoved = new EventEmitter<any>();
   @Output() elementEdited = new EventEmitter<SingleDateElement>();
-  @ContentChildren(TemplateWithIdDirective)
-  templates!: QueryList<TemplateWithIdDirective>;
-  @ViewChild(MatTable) table!: MatTable<any>;
-
-  // @ViewChild(MatColumnDef, { static: true }) columnDef!: MatColumnDef;
-  // @ViewChild(MatCellDef, { static: true }) cellDef!: MatCellDef;
-  // @ViewChild(MatHeaderCellDef, { static: true }) headerCellDef!: MatHeaderCellDef;
-  // @ViewChild(MatFooterCellDef, { static: true }) footerCellDef!: MatFooterCellDef;
-
-  // ngOnInit() {
-  //   if (this.table && this.columnDef) {
-  //     this.columnDef.cell       = this.cellDef;
-  //     this.columnDef.headerCell = this.headerCellDef;
-  //     this.columnDef.footerCell = this.footerCellDef;
-  //     this.table.addColumnDef(this.columnDef);
-  //   }
-  // }
-
-  prependTemplate!: TemplateRef<TemplateWithIdDirective>;
-  appendTemplate!: TemplateRef<TemplateWithIdDirective>;
+  @ContentChildren(MatColumnDef, { read: MatColumnDef }) columnDefs?: QueryList<MatColumnDef>;
+  @ViewChild(MatTable, { static: true }) table!: MatTable<any>;
 
   columns: string[] = [];
   dataSource: { [key: string]: string | number | boolean | Date }[] = [];
@@ -63,22 +45,14 @@ export class AbstractTableComponent implements OnInit, AfterContentInit, AfterVi
   }
 
   ngAfterContentInit() {
-    this.templates.forEach((child: TemplateWithIdDirective) => {
-      console.log('CHILD');
-      console.log(child);
+    if(!this.columnDefs) {
+      return;
+    }
 
-      switch (child.id) {
-        case 'prepend': {
-          this.prependTemplate = child.template;
-          break;
-        }
-        case 'append': {
-          this.appendTemplate = child.template;
-          break;
-        }
-      }
+    this.columnDefs.forEach((child: CdkColumnDef) => {
+      this.table.addColumnDef(child);
+      this.displayedColumns.push(child.name);
     });
-
   }
 
   ngAfterViewInit() {
